@@ -1,0 +1,3 @@
+export const GEMINI_PRO_MODEL = 'GEMINI_PRO_MODEL';
+export const GEMINI_PRO_VISION_MODEL = 'GEMINI_PRO_VISION_MODEL';
+export const GEMINI_PRO_VISION_1_5_FLASK_MODEL= "gemini-1.5-flash";
