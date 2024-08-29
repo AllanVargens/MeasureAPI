@@ -7,6 +7,9 @@ import { InvalidDataIncorrectException } from '../exceptions/invalidDataExceptio
 import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { ConfirmedValueType, MeasureConfirmResponseDTO, MeasureUpdateDTO } from './dto/measure-confirm.dto';
+import { MeasureNotFoundException } from '../exceptions/measureNotFoundException';
+import { ConfirmationDuplicateException } from '../exceptions/confirmationDuplicateException';
 
 @Injectable()
 export class MeasureService {
@@ -66,6 +69,42 @@ export class MeasureService {
             throw new InvalidDataIncorrectException(err)
         }
         
+    }
+
+    async confirm(data: MeasureUpdateDTO): Promise<MeasureConfirmResponseDTO | InvalidDataIncorrectException | MeasureNotFoundException | ConfirmationDuplicateException>{
+        const {confirmed_value, measure_uuid} = data;
+        try{
+            const measureFounded = await this.prisma.measure.findFirst({
+                where: {
+                    measure_uuid
+                }
+            })
+
+            if (!measureFounded) {
+                throw new MeasureNotFoundException("Leitura não encontrada")
+            }
+
+            if ((await measureFounded).has_confirmed == true) {
+                throw new ConfirmationDuplicateException("Leitura do mês já realizada")
+            }
+
+            const statusBoolean = confirmed_value === ConfirmedValueType.TRUE;
+
+            const measureUpdate = await this.prisma.measure.update({
+                where:{
+                    measure_uuid
+                },
+                data: {
+                    has_confirmed: statusBoolean
+                }
+            });
+
+            return {
+                success: true
+            }
+        }catch (err){
+            throw new InvalidDataIncorrectException(err)
+        }
     }
 
     private extractMimeType(base64String: string): string {
