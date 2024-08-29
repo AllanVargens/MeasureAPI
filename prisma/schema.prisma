@@ -25,6 +25,7 @@ model Custumer{
 
 model Measure{
   measure_uuid        String @id @default(uuid())
+  measure_value       Int @unique
   measure_datetime    DateTime
   measure_type        MeasureType
   has_confirmed       Boolean @default(false)
