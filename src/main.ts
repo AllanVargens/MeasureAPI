@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { validateConfig } from 'validate.config';
 import { INestApplication } from '@nestjs/common';
+import * as bodyParser from 'body-parser';
 
 function setupSwagger(app: INestApplication){
   const config = new DocumentBuilder()
@@ -19,6 +20,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
   app.useGlobalPipes(validateConfig);
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
   setupSwagger(app)
   await app.listen(3000);
 }

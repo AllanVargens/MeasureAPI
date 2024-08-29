@@ -11,9 +11,11 @@ export class GeminiService {
     )
     {}
 
-    async generateTextFromMultiModal(prompt: string, file: Express.Multer.File) {
+    async generateTextFromMultiModal(prompt: string, file: string, mimeType: string) {
         try{
-            const contents = createContent(prompt, file);
+
+            const imagemBuffer = Buffer.from(file, "base64");
+            const contents = createContent(prompt, {buffer: imagemBuffer, mimeType});
 
             const {totalTokens} = await this.proVisionModelFlask.countTokens({contents});
             const result = await this.proVisionModelFlask.generateContent({contents});

@@ -1,12 +1,12 @@
 
 import { Content, Part } from '@google/generative-ai';
 
-export function createContent(text: string, ...images: Express.Multer.File[]): Content[] {
-    const imagesParts: Part[] = images.map((image) => {
+export function createContent(text: string, ...images: { buffer: Buffer, mimeType: string}[]): Content[] {
+    const imagesParts: Part[] = images.map(({buffer, mimeType}) => {
         return {
             inlineData: {
-                mimeType: image.mimetype,
-                data: image.buffer.toString("base64")
+                mimeType: mimeType,
+                data: buffer.toString("base64")
             },
         };
     });
