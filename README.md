@@ -49,7 +49,7 @@ Como não foi solicitado a rota de criação de usuário e foi definido que a AP
 
 "customer_code": "59b9b5db-7574-4fd1-8958-21edf197a7c7"
 
-1. POST "/upload"
+### 1. POST "/upload"
 
 {
 "image": "base64",
@@ -58,16 +58,16 @@ Como não foi solicitado a rota de criação de usuário e foi definido que a AP
 "measure_type": "WATER" ou "GAS"
 }
 
-2. PATCH "/confirm"
+### 2. PATCH "/confirm"
 
-  recebe 0 ou 1
+  recebe 0 ou 1, onde 1 confirma a medida
 
 {
 "measure_uuid": "",
 "confirmed_value": 1
 }
 
-3. GET "/:custumer_code/list?meaure_type="
+### 3. GET "/:custumer_code/list?meaure_type="
 
 measure_type é um argumento opcional
 
