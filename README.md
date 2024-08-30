@@ -1,85 +1,79 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+<h2 align="center">
+  MeasureAPI
+</h2>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+  <p align="start">Aplicação desenvolvida como forma de avaliação da empresa Shopper para a vaga de Full Stack Jr</p>
+  <p align="start">Prazer, me chamo Allan, a seguir estarei apresentando a documentação da aplicação feita!</p>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Diagrama de classes
 
-## Description
+````mermaid
+erDiagram
+Custumer {
+        String custumer_code PK "Primary Key, UUID"
+    }
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+    Measure {
+        String measure_uuid PK "Primary Key, UUID"
+        Int measure_value "Unique"
+        DateTime measure_datetime
+        Enum measure_type "WATER or GAS"
+        Boolean has_confirmed "Default: false"
+        String image_url
+        String custumer_code FK "Foreign Key"
+    }
 
-## Project setup
+    Custumer ||--o{ Measure : "measures"
+    Measure }o--|| Custumer : "custumer"
 
-```bash
-$ yarn install
-```
+````
 
-## Compile and run the project
+## Tecnologias
 
-```bash
-# development
-$ yarn run start
+- NodeJs
+- NestJs
+- Prisma
+- Docker
+- Postgres
 
-# watch mode
-$ yarn run start:dev
+  obs.: Como foi especificado que o .env deveria conter apenas acesso a chave Gemini, optei por deixar a url do banco no codigo, porem nao se preocupem, o banco de dados utilizado foi feito exclusivamente para esse teste.
 
-# production mode
-$ yarn run start:prod
-```
+## Branchs
 
-## Run tests
+Na branch principal irá conter apenas o docker-compose.yml e o readme mostrando a api totalmente dockerizada.
+na branch "Codigo" estará o código para avaliação.
 
-```bash
-# unit tests
-$ yarn run test
+## Documentacao
 
-# e2e tests
-$ yarn run test:e2e
+Como não foi solicitado a rota de criação de usuário e foi definido que a API teria exclusivamente os 3 endpoints, tomei a liberdade de criar um e deixar registrado no banco para o uso dos testes
 
-# test coverage
-$ yarn run test:cov
-```
+"customer_code": "59b9b5db-7574-4fd1-8958-21edf197a7c7"
 
-## Resources
+1. POST "/upload"
 
-Check out a few resources that may come in handy when working with NestJS:
+{
+"image": "base64",
+"customer_code": "string",
+"measure_datetime": "datetime",
+"measure_type": "WATER" ou "GAS"
+}
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+2. PATCH "/confirm"
 
-## Support
+  recebe 0 ou 1
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+{
+"measure_uuid": "",
+"confirmed_value": 1
+}
 
-## Stay in touch
+3. GET "/:custumer_code/list?meaure_type="
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+measure_type é um argumento opcional
 
-## License
+## Rodando
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+para rodar basta dar o 
+``` docker-compose up ```
+
+ 
