@@ -3,7 +3,6 @@ FROM node:latest
 WORKDIR /usr/src/api
 
 COPY . .
-COPY .env ./
 
 RUN yarn install 
 
