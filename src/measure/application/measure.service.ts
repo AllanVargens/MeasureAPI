@@ -131,20 +131,18 @@ export class MeasureService {
   }
 
   async findMeasures(custumer_code: string, measure_type?: MeasureType) {
-    const custumerFounded = await this.prisma.custumer.findUnique({
+    const custumerFounded = await this.prisma.custumer.findMany({
       where: {
         custumer_code,
-        ...(measure_type && {
-          measures: {
-            some: {
-              measure_type,
-            },
-          },
-        }),
       },
       select: {
         custumer_code: true,
         measures: {
+          where: measure_type
+            ? {
+                measure_type,
+              }
+            : {},
           select: {
             measure_uuid: true,
             measure_datetime: true,
