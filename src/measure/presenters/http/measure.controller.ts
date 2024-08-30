@@ -1,8 +1,9 @@
-import { Body, Controller, Patch, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Param, Patch, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { MeasureService } from '../../application/measure.service';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiQuery } from '@nestjs/swagger';
 import { MeasureUploadRequestDTO } from 'src/measure/application/dto/measure-upload.dto';
 import { MeasureUpdateDTO } from 'src/measure/application/dto/measure-confirm.dto';
+import { MeasureType } from '@prisma/client';
 
 @Controller('')
 export class MeasureController {
@@ -19,7 +20,7 @@ export class MeasureController {
     return this.measureService.upload(data)
     }
 
-    @ApiBody({description: "Request body for measure patch",
+    @ApiBody({description: "0 - desconfirmar / 1 - confirmar",
       type: MeasureUpdateDTO
     })
     @Patch("confirm")
@@ -28,4 +29,24 @@ export class MeasureController {
     ): Promise<any> {
       return this.measureService.confirm(data)
     }
+
+    @ApiQuery({ name: 'measure_type', required: false, type: String })
+    @Get(":custumer_code/list?")
+    async findMeasures(@Param("custumer_code") custumer_code: string, @Query("measure_type") measure_type?: string) {
+      let enumMeasureType: MeasureType | undefined;
+
+    if (measure_type) {
+        enumMeasureType = Object.values(MeasureType).find(
+            (type) => type === measure_type.toUpperCase()
+        );
+
+        if (!enumMeasureType) {
+            throw new BadRequestException(`Invalid measure type: ${measure_type}`);
+        }
+    }
+
+      
+      return this.measureService.findMeasures(custumer_code, enumMeasureType);
+    }
+
 }

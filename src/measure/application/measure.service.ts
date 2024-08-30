@@ -10,6 +10,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { ConfirmedValueType, MeasureConfirmResponseDTO, MeasureUpdateDTO } from './dto/measure-confirm.dto';
 import { MeasureNotFoundException } from '../exceptions/measureNotFoundException';
 import { ConfirmationDuplicateException } from '../exceptions/confirmationDuplicateException';
+import { InvalidTypeIncorrectException } from '../exceptions/invalidTypeException';
+import { MeasureType } from '@prisma/client';
 
 @Injectable()
 export class MeasureService {
@@ -105,6 +107,43 @@ export class MeasureService {
         }catch (err){
             throw new InvalidDataIncorrectException(err)
         }
+    }
+
+    async findMeasures( custumer_code: string, measure_type?: MeasureType,){
+
+        if (measure_type !== "WATER" && measure_type !== "GAS" && measure_type !== undefined) {
+            throw new InvalidTypeIncorrectException("Tipo de medição não permitida")
+        }
+        const custumerFounded =  await this.prisma.custumer.findUnique({
+            where: {
+                custumer_code,
+                ...(measure_type && {
+                    measures: {
+                        some: {
+                            measure_type,
+                        },
+                    },
+                }),
+            },
+            select: {
+                custumer_code: true,
+                measures: {
+                    select:{
+                        measure_uuid: true,
+                        measure_datetime: true,
+                        measure_type: true,
+                        has_confirmed: true,
+                        image_url: true
+                    }
+                }
+            }
+        })
+
+        if (!custumerFounded) {
+            throw new MeasureNotFoundException("Nenhuma leitura encontrada")
+        }
+
+        return custumerFounded
     }
 
     private extractMimeType(base64String: string): string {
