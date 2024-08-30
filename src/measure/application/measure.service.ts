@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { GeminiService } from 'src/gemini/application/gemini.service';
+import { GeminiService } from '../../gemini/application/gemini.service';
 import { MeasureUploadRequestDTO, MeasureUploadResponseDTO } from './dto/measure-upload.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { DoubleReportException } from '../exceptions/doubleReportException';
 import { InvalidDataIncorrectException } from '../exceptions/invalidDataException';
 import * as fs from 'fs';
@@ -37,6 +37,7 @@ export class MeasureService {
             const measure_value = parseInt(response.text.match(/\d+/).toString());
             const measureFounded = await this.prisma.measure.findFirst({
                 where:{
+                    custumer_code,
                     measure_value: measure_value
                 }
             })

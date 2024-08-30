@@ -1,5 +1,5 @@
 import { HttpStatus } from "@nestjs/common";
-import { AppException } from "src/exceptions/appException";
+import { AppException } from "../../exceptions/appException";
 
 export class MeasureNotFoundException extends AppException{
     constructor(error: string){
