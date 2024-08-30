@@ -67,7 +67,7 @@ Como não foi solicitado a rota de criação de usuário e foi definido que a AP
 "confirmed_value": 1
 }
 
-### 3. GET "/:custumer_code/list?meaure_type="
+### 3. GET "/:custumer_code/list?measure_type="
 
 measure_type é um argumento opcional
 
