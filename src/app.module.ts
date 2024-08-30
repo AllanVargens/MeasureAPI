@@ -3,10 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GeminiModule } from './gemini/gemini.module';
 import { MeasureModule } from './measure/measure.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+
 
 @Module({
-  imports: [GeminiModule, MeasureModule],
+  imports: [GeminiModule, MeasureModule, ConfigModule.forRoot()],
   controllers: [AppController],
   providers: [AppService],
 })
