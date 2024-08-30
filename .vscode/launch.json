@@ -7,7 +7,7 @@
         "name": "Debug Nest Framework",
         "runtimeExecutable": "yarn",
         "runtimeArgs": [
-          "test",
+          "start:dev",
           "measure.service.spec.ts",
           "--",
           "--inspect-brk"

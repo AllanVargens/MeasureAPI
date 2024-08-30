@@ -1,0 +1,19 @@
+services:
+  measure-api:
+    image: allanvargens/measureapi:latest
+    container_name: allanvargens-measure-api
+    ports:
+      - 3000:3000
+    networks:
+      - measure-api-network
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+    build: 
+     dockerfile: ./Dockerfile
+    command: yarn start:prod
+
+networks:
+  measure-api-network:
+    driver: bridge
